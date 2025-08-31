@@ -40,7 +40,7 @@ BRANDING_PROFILES = {
         ]
     },
     'NZ3C': {
-        'logo_path': 'images/NZ3C/NZ3CLogo.png',
+        'logo_path': 'images/NZ3C/NZ3CCompactLogo.jpg',
         'callsign': 'NZ3C',
         'site_name': 'NZ3C Exam Results',
         'subtitle': 'For convenience only, not part of ExamTools.org',
