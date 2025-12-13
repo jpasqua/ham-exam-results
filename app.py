@@ -12,7 +12,11 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
 @app.context_processor
 def inject_branding():
-    selected = request.args.get('brand', DEFAULT_BRAND).upper()
+    selected = (
+        request.args.get('brand')
+        or request.args.get('team')
+        or DEFAULT_BRAND
+    ).upper()
     branding = BRANDING_PROFILES.get(selected, BRANDING_PROFILES[DEFAULT_BRAND])
     return dict(branding=branding)
 

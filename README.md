@@ -34,9 +34,13 @@ A small help section is provided by the tool to guide the VE through the process
 
 ## Branding
 
-The app can present itself with different branding based on a case-insensitive URL parameter: `brand`. For example, on a local host one could use the URL:
+The app can present itself with different branding based on a case-insensitive URL parameter: `brand`. You may also use `team` instead of `brand`. It will have the same effect. For example, on a local host one could use the URL:
 
 `http://127.0.0.1:5000/?brand=kr4ml`
+    
+OR equivalently:
+
+`http://127.0.0.1:5000/?team=kr4ml`
 
 This will display branding (images, text, favicon) that is specific to the `KR4ML` brand, assuming it has been properly configured in the `config.py` file. If no brand parameter is found, the default brand will be used. To add a brand to the configuration, you'll need to edit `config.py` and add a stanza like the one for KR4ML below:
 
