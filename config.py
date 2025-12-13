@@ -1,6 +1,6 @@
 # config.py
 
-DEFAULT_BRAND = 'KR4ML'
+DEFAULT_BRAND = 'WM7X'
 
 BRANDING_PROFILES = {
     'WM7X': {
@@ -37,6 +37,18 @@ BRANDING_PROFILES = {
             {'size': '192x192', 'href': '/static/images/KQ4DX/favicon-192x192.png'},
             {'size': '180x180', 'href': '/static/images/KQ4DX/apple-touch-icon.png'},
             {'size': '270x270', 'href': '/static/images/KQ4DX/mstile-270x270.png'}
+        ]
+    },
+    'N9BI': {
+        'logo_path': 'images/N9BI/N9BILogo.png',
+        'callsign': 'N9BI',
+        'site_name': 'N9BI Exam Results',
+        'subtitle': 'For convenience only, not part of ExamTools.org',
+        'favicons': [
+            {'size': '32x32', 'href': '/static/images/N9BI/favicon-32x32.png'},
+            {'size': '192x192', 'href': '/static/images/N9BI/favicon-192x192.png'},
+            {'size': '180x180', 'href': '/static/images/N9BI/apple-touch-icon.png'},
+            {'size': '270x270', 'href': '/static/images/N9BI/mstile-270x270.png'}
         ]
     },
     'NZ3C': {
