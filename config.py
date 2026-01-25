@@ -1,6 +1,6 @@
 # config.py
 
-DEFAULT_BRAND = 'WM7X'
+DEFAULT_BRAND = 'KG6G'
 
 BRANDING_PROFILES = {
     'WM7X': {
@@ -25,6 +25,18 @@ BRANDING_PROFILES = {
             {'size': '192x192', 'href': '/static/images/KR4ML/favicon-192x192.png'},
             {'size': '180x180', 'href': '/static/images/KR4ML/apple-touch-icon.png'},
             {'size': '270x270', 'href': '/static/images/KR4ML/mstile-270x270.png'}
+        ]
+    },
+    'KG6G': {
+        'logo_path': 'images/KG6G/KG6GLogo.png',
+        'callsign': 'KG6G',
+        'site_name': 'KG6G Exam Results',
+        'subtitle': 'For convenience only, not part of ExamTools.org',
+        'favicons': [
+            {'size': '32x32', 'href': '/static/images/KG6G/favicon-32x32.png'},
+            {'size': '192x192', 'href': '/static/images/KG6G/favicon-192x192.png'},
+            {'size': '180x180', 'href': '/static/images/KG6G/apple-touch-icon.png'},
+            {'size': '270x270', 'href': '/static/images/KG6G/mstile-270x270.png'}
         ]
     },
     'KQ4DX': {
