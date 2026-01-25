@@ -68,8 +68,8 @@ The default brand is also specified in `config.py` with the key `DEFAULT_BRAND`.
 1️⃣ Clone the repository:
 
 ```bash
-git clone <repo-url>
-cd ham_exam_web
+git clone https://github.com/jpasqua/ham-exam-results
+cd ham-exam-results
 ```
 
 2️⃣ Set up Python virtual environment:
