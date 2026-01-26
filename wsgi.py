@@ -1,5 +1,5 @@
 # This file contains the WSGI configuration required to serve up your
-# web application at http://kr4ml.pythonanywhere.com/
+# web application at http://KG6G.pythonanywhere.com/
 # It works by setting the variable 'application' to a WSGI handler of some
 # description.
 #
@@ -20,7 +20,7 @@ inside app.py (imported as 'application').
 """
 
 # Full path to your project folder
-project_home = '/home/kr4ml/wm7x-exam-results'
+project_home = '/home/KG6G/ham-exam-results'
 
 # Add the project directory to the sys.path if it's not already there
 if project_home not in sys.path:
