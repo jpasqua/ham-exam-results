@@ -122,6 +122,7 @@ http://127.0.0.1:5000/
 
 * Go to https://www.pythonanywhere.com  
 * Open **Dashboard**
+* Open a `bash` console
 
 ### 3️⃣ Clone project into PythonAnywhere
 
@@ -142,21 +143,28 @@ cd ham-exam-results
 python -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
+# Determine python version, we will use it in a minute
+python --version
 ```
 
 ### 5️⃣ Set up web app
 
 In **PythonAnywhere Web tab**:
 
-* Create **Manual → Python 3.10 app**  
+* Create **Manual**
+* Set the python version to the one we found above (e.g. Python 3.13)  
 * Set:
 
-	- Working directory: `/home/kr4ml/ham-exam-results`
-	- Virtualenv path: `/home/kr4ml/hame-exam-results/venv`
+	- Working directory: `/home/your_username/ham-exam-results`
+	- Virtualenv path: `/home/your_username/ham-exam-results/venv`
 
 ### 6️⃣ Configure WSGI file
 
-Edit WSGI configuration (linked in Web tab, usually `/var/www/kr4ml_pythonanywhere_com_wsgi.py`). Copy the content of `/home/kr4ml/ham-exam-results/wsgi.py`.
+Edit WSGI configuration (linked in Web tab, usually `/var/www/your_username_pythonanywhere_com_wsgi.py`). Copy the content of `/home/your_username/ham-exam-results/wsgi.py`. You may need to adjust the content to point at your home directory. For example:
+
+```
+project_home = '/home/KG6G/ham-exam-results'
+```
 
 
 ### 7️⃣ Reload web app
@@ -226,3 +234,4 @@ This project is licensed under the MIT License — see the [LICENSE](LICENSE) fi
 ## Disclaimers
 
 Not affiliated with ExamTools.org - provided as a tool for the testing community.
+	
