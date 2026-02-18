@@ -68,13 +68,10 @@ def parse_exam_pdf(pdf_path):
       - report (list of dicts with missed question details)
     """
     import collections
-    import re
-    import pdfplumber
 
     applicant_name = None
     exams = collections.defaultdict(lambda: {
         "exam_designator": None,
-        "designators": [],
         "missed": [],
         "score": None,
         "date": None,
@@ -176,7 +173,6 @@ def parse_exam_pdf(pdf_path):
                             "chosen": chosen,
                             "correct": correct
                         })
-                        exams[page_num]["designators"].append(designator)
 
             exams[page_num]["exam_designator"] = exam_designator
             debug_log(
