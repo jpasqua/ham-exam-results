@@ -1,6 +1,7 @@
 import re
 import pdfplumber
 import json
+import os
 from datetime import datetime
 from pathlib import Path
 
@@ -48,6 +49,13 @@ POOL_VALIDITY_OVERRIDES = {
     ("technician", "2026-07-01"): "2026-06-30",
     ("extra", "2028-07-01"): "2028-06-30",
 }
+
+# Set HAM_RESULTS_DEBUG=1 to enable parser diagnostics.
+DEBUG_PARSER = os.getenv("HAM_RESULTS_DEBUG", "").strip().lower() in ("1", "true", "yes", "on")
+
+def debug_log(message):
+    if DEBUG_PARSER:
+        print(f"[DEBUG] {message}")
 
 def parse_exam_pdf(pdf_path):
     """
@@ -132,8 +140,8 @@ def parse_exam_pdf(pdf_path):
                         try:
                             exams[page_num]["pool_valid_from"] = parse_pool_validity_date(valid_from_raw)
                             exams[page_num]["pool_valid_through"] = parse_pool_validity_date(valid_through_raw)
-                            print(
-                                f"[DEBUG] Page {page_num + 1}: pool validity parsed: "
+                            debug_log(
+                                f"Page {page_num + 1}: pool validity parsed: "
                                 f"type='{pool_exam_type}', from='{valid_from_raw}', through='{valid_through_raw}'"
                             )
                         except ValueError as e:
@@ -171,8 +179,8 @@ def parse_exam_pdf(pdf_path):
                         exams[page_num]["designators"].append(designator)
 
             exams[page_num]["exam_designator"] = exam_designator
-            print(
-                f"[DEBUG] Page {page_num + 1}: "
+            debug_log(
+                f"Page {page_num + 1}: "
                 f"exam_designator='{exam_designator}', exam_started='{exams[page_num]['date']}', "
                 f"pool_valid_through='{exams[page_num]['pool_valid_through']}'"
             )
@@ -311,8 +319,8 @@ def load_question_pool(first_designator, pool_valid_through=None, exam_date=None
 
         for cutoff, file_path in candidates:
             if cutoff == normalized_pool_valid_through:
-                print(
-                    f"[DEBUG] Pool selection for '{first_designator}': "
+                debug_log(
+                    f"Pool selection for '{first_designator}': "
                     f"matched pool_valid_through={normalized_pool_valid_through.isoformat()} -> '{file_path.name}'"
                 )
                 return load_pool_file(file_path)
@@ -339,8 +347,8 @@ def load_question_pool(first_designator, pool_valid_through=None, exam_date=None
         )
 
     _, pool_file = min(fallback_candidates, key=lambda item: item[0])
-    print(
-        f"[DEBUG] Pool selection for '{first_designator}': "
+    debug_log(
+        f"Pool selection for '{first_designator}': "
         f"fallback by exam_date={exam_date.isoformat()} -> '{pool_file.name}'"
     )
     return load_pool_file(pool_file)
@@ -349,7 +357,7 @@ def load_pool_file(pool_file):
     """
     Load a pool file and return a dict keyed by question ID.
     """
-    print(f"[DEBUG] Loading question pool file: {pool_file}")
+    debug_log(f"Loading question pool file: {pool_file}")
 
     with open(pool_file, 'r', encoding='utf-8') as f:
         data = json.load(f)
@@ -372,8 +380,8 @@ def normalize_pool_valid_through(class_prefix, pool_valid_through):
         return pool_valid_through
 
     corrected_date = datetime.strptime(corrected, "%Y-%m-%d").date()
-    print(
-        f"[DEBUG] Applying ExamTools validity override for '{class_prefix}': "
+    debug_log(
+        f"Applying ExamTools validity override for '{class_prefix}': "
         f"{pool_valid_through.isoformat()} -> {corrected_date.isoformat()}"
     )
     return corrected_date

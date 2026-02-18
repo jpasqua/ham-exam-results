@@ -220,6 +220,9 @@ When you've completed these steps you will have:
 - The names include the exam class and last eligible date in this format: `<class>_YYYY-MM-DD.json` (for example, `technician_2026-06-30.json`).
 - At runtime, the app primarily selects the pool by parsing the PDF validity line, for example: `General exam valid Jul 1, 2023 — Jun 30, 2027`.
 - The code includes a compatibility override table for known ExamTools validity-date mistakes that appear in historical PDFs. For example, we currently normalize: Technician `Jul 1, 2026` to `Jun 30, 2026` before filename matching. This is a known problem in existing ExamTools results files.
+- Parser debug output is off by default. To enable detailed parser and pool-selection diagnostics for troubleshooting, set `HAM_RESULTS_DEBUG`  before running the app; e.g.
+
+	`export HAM_RESULTS_DEBUG=1`
 
 - Uploaded PDFs are stored temporarily on the server and **deleted immediately after processing**.
 - No exam or user data is saved.
