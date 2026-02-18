@@ -437,16 +437,22 @@ def build_detailed_report(missed, question_pool):
             continue
 
         # Convert letter (A-D) to index (0-3) for answer text lookup
-        your_index = 'ABCD'.index(m['chosen'])
-        correct_index = 'ABCD'.index(m['correct'])
+        your_letter = (m.get('chosen') or "").upper()
+        correct_letter = (m.get('correct') or "").upper()
+
+        your_index = 'ABCD'.index(your_letter) if your_letter in 'ABCD' else None
+        correct_index = 'ABCD'.index(correct_letter) if correct_letter in 'ABCD' else None
+
+        your_answer_text = q['answers'][your_index] if your_index is not None else "(Unknown)"
+        correct_answer_text = q['answers'][correct_index] if correct_index is not None else "(Unknown)"
 
         detailed_report.append({
             "designator": m['designator'],
             "question": q['question'],
             "your_answer_letter": m['chosen'],
-            "your_answer_text": q['answers'][your_index],
+            "your_answer_text": your_answer_text,
             "correct_answer_letter": m['correct'],
-            "correct_answer_text": q['answers'][correct_index]
+            "correct_answer_text": correct_answer_text
         })
 
     return detailed_report
