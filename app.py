@@ -1,7 +1,7 @@
 import os
 from flask import Flask, request, render_template
 import processor  # local module for PDF parsing and reporting
-from config import BRANDING_PROFILES, DEFAULT_BRAND
+from config import BRANDING_PROFILES, DEFAULT_TEAM
 
 # Initialize the Flask app
 app = Flask(__name__)
@@ -13,11 +13,11 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 @app.context_processor
 def inject_branding():
     selected = (
-        request.args.get('brand')
-        or request.args.get('team')
-        or DEFAULT_BRAND
+        request.args.get('team')
+        or request.args.get('brand')
+        or DEFAULT_TEAM
     ).upper()
-    branding = BRANDING_PROFILES.get(selected, BRANDING_PROFILES[DEFAULT_BRAND])
+    branding = BRANDING_PROFILES.get(selected, BRANDING_PROFILES[DEFAULT_TEAM])
     return dict(branding=branding)
 
 def exam_type_from_designator(designator):
