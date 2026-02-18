@@ -1,6 +1,6 @@
 # config.py
 
-DEFAULT_BRAND = 'KG6G'
+DEFAULT_TEAM = 'KG6G'
 
 BRANDING_PROFILES = {
     'WM7X': {
