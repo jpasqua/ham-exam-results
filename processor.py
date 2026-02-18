@@ -1,7 +1,18 @@
 import re
 import pdfplumber
 import json
-import os
+from datetime import datetime
+from pathlib import Path
+
+DATE_PARSE_FORMATS = (
+    "%B %d, %Y %H:%M:%S UTC",
+    "%B %d, %Y %H:%M UTC",
+    "%b %d, %Y %H:%M:%S UTC",
+    "%b %d, %Y %H:%M UTC",
+    "%Y-%m-%d %H:%M:%S UTC",
+    "%Y-%m-%d %H:%M UTC",
+)
+POOL_INDEX_CACHE = {}
 
 def parse_exam_pdf(pdf_path):
     """
@@ -103,7 +114,8 @@ def parse_exam_pdf(pdf_path):
         # Sort missed questions by designator
         exam["missed"].sort(key=lambda x: x['designator'])
 
-        pool = load_question_pool(exam["exam_designator"])
+        exam_date = parse_exam_date(exam["date"])
+        pool = load_question_pool(exam["exam_designator"], exam_date)
         detailed_report = build_detailed_report(exam["missed"], pool)
         results.append({
             "exam_type": exam_type_from_designator(exam["exam_designator"]),
@@ -131,32 +143,89 @@ def exam_type_from_designator(designator):
     }
     return exam_type_map.get(designator[0].upper(), 'Unknown')
 
-def load_question_pool(first_designator):
+def parse_exam_date(raw_exam_date):
     """
-    Loads the correct question pool JSON based on the designator.
+    Parse the exam date string from the PDF into a date object.
+
+    Args:
+        raw_exam_date (str | None): e.g. 'July 10, 2025 21:35 UTC'
+
+    Returns:
+        datetime.date
+    """
+    if not raw_exam_date:
+        raise ValueError("Could not parse exam date from PDF.")
+
+    exam_date_text = raw_exam_date.strip()
+    for fmt in DATE_PARSE_FORMATS:
+        try:
+            return datetime.strptime(exam_date_text, fmt).date()
+        except ValueError:
+            continue
+
+    raise ValueError(f"Unrecognized exam date format: '{raw_exam_date}'")
+
+def load_question_pool(first_designator, exam_date):
+    """
+    Loads the correct question pool JSON based on designator and exam date.
 
     Args:
         first_designator (str): e.g., 'T1A01', 'G4B02', 'E1A05'
+        exam_date (datetime.date): Exam date from the report
 
     Returns:
         dict: Mapping of designator IDs to question data
     """
-    pool_file_map = {
-        'T': 'technician.json',
-        'G': 'general.json',
-        'E': 'extra.json'
+    class_prefix_map = {
+        'T': 'technician',
+        'G': 'general',
+        'E': 'extra'
     }
     pool_key = first_designator[0].upper()
-    pool_file = os.path.join('data', pool_file_map.get(pool_key))
+    class_prefix = class_prefix_map.get(pool_key)
+    if not class_prefix:
+        raise ValueError(f"Unknown exam designator '{first_designator}'")
 
-    if not pool_file or not os.path.exists(pool_file):
-        raise FileNotFoundError(f"Question pool file '{pool_file}' not found for designator '{first_designator}'")
+    candidates = []
+    for cutoff, file_path in get_pool_candidates(class_prefix):
+        if cutoff >= exam_date:
+            candidates.append((cutoff, file_path))
+
+    if not candidates:
+        raise FileNotFoundError(
+            f"No eligible {class_prefix} question pool found for exam date {exam_date.isoformat()} "
+            f"and designator '{first_designator}'."
+        )
+
+    _, pool_file = min(candidates, key=lambda item: item[0])
 
     with open(pool_file, 'r', encoding='utf-8') as f:
         data = json.load(f)
 
     # Build a dict { 'T1A01': {...}, 'T1A02': {...}, ... }
     return { q['id']: q for q in data }
+
+def get_pool_candidates(class_prefix):
+    """
+    Return cached list of (cutoff_date, file_path) for a given class prefix.
+    """
+    if class_prefix in POOL_INDEX_CACHE:
+        return POOL_INDEX_CACHE[class_prefix]
+
+    data_dir = Path(__file__).resolve().parent / "data"
+    pattern = re.compile(rf"^{class_prefix}_(\d{{4}}-\d{{2}}-\d{{2}})\.json$")
+    indexed = []
+
+    for file_path in data_dir.glob(f"{class_prefix}_*.json"):
+        match = pattern.match(file_path.name)
+        if not match:
+            continue
+        cutoff = datetime.strptime(match.group(1), "%Y-%m-%d").date()
+        indexed.append((cutoff, file_path))
+
+    indexed.sort(key=lambda item: item[0])
+    POOL_INDEX_CACHE[class_prefix] = indexed
+    return indexed
 
 def build_detailed_report(missed, question_pool):
     """
