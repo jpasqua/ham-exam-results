@@ -15,6 +15,18 @@ BRANDING_PROFILES = {
             {'size': '270x270', 'href': '/static/images/WM7X/mstile-270x270.png'}
         ]
     },
+    'SURF': {
+        'logo_path': 'images/SURF/SURFLogo.jpg',
+        'callsign': 'SURF',
+        'site_name': 'SURF Exam Results',
+        'subtitle': 'For convenience only, not part of ExamTools.org',
+        'favicons': [
+            {'size': '32x32', 'href': '/static/images/SURF/favicon-32x32.png'},
+            {'size': '192x192', 'href': '/static/images/SURF/favicon-192x192.png'},
+            {'size': '180x180', 'href': '/static/images/SURF/apple-touch-icon.png'},
+            {'size': '270x270', 'href': '/static/images/SURF/mstile-270x270.png'}
+        ]
+    },
     'KR4ML': {
         'logo_path': 'images/KR4ML/KR4MLLogo.jpg',
         'callsign': 'KR4ML',
