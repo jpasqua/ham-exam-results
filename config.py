@@ -16,7 +16,7 @@ BRANDING_PROFILES = {
         ]
     },
     'SURF': {
-        'logo_path': 'images/SURF/TeamLogo.png',
+        'logo_path': 'images/SURF/SURFLogo.jpg',
         'callsign': 'SURF',
         'site_name': 'Generate Results',
         'subtitle': 'For convenience only, not part of ExamTools.org',
