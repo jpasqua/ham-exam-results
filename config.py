@@ -18,7 +18,7 @@ BRANDING_PROFILES = {
     'SURF': {
         'logo_path': 'images/SURF/SURFLogo.jpg',
         'callsign': 'SURF',
-        'site_name': 'SURF Exam Results',
+        'site_name': 'Generate Results',
         'subtitle': 'For convenience only, not part of ExamTools.org',
         'favicons': [
             {'size': '32x32', 'href': '/static/images/SURF/favicon-32x32.png'},
