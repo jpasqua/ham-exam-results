@@ -51,6 +51,18 @@ BRANDING_PROFILES = {
             {'size': '270x270', 'href': '/static/images/KG6G/mstile-270x270.png'}
         ]
     },
+    'W8FT': {
+        'logo_path': 'images/W8FT/TeamLogo.png',
+        'callsign': 'W8FT',
+        'site_name': 'W8FT Exam Results',
+        'subtitle': 'For convenience only, not part of ExamTools.org',
+        'favicons': [
+            {'size': '32x32', 'href': '/static/images/W8FT/favicon-32x32.png'},
+            {'size': '192x192', 'href': '/static/images/W8FT/favicon-192x192.png'},
+            {'size': '180x180', 'href': '/static/images/W8FT/apple-touch-icon.png'},
+            {'size': '270x270', 'href': '/static/images/W8FT/mstile-270x270.png'}
+        ]
+    },
     'KQ4DX': {
         'logo_path': 'images/KQ4DX/KQ4DXLogo.png',
         'callsign': 'KQ4DX',

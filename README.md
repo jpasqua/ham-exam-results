@@ -230,10 +230,10 @@ When you've completed these steps you will have:
 - To create favicons for a new team (aka brand), either design custom icons at the sizes listed below, or start with the logo for the team (e.g. `TeamLogo.png`) and apply the `imagemagik convert` command as follows:
 
 ```bash
-convert TeamLogo.png -resize 32x32   favicon-32x32.png
-convert TeamLogo.png -resize 192x192 favicon-192x192.png
-convert TeamLogo.png -resize 180x180 apple-touch-icon.png
-convert TeamLogo.png -resize 270x270 mstile-270x270.png
+magick TeamLogo.png -resize 32x32   favicon-32x32.png
+magick TeamLogo.png -resize 192x192 favicon-192x192.png
+magick TeamLogo.png -resize 180x180 apple-touch-icon.png
+magick TeamLogo.png -resize 270x270 mstile-270x270.png
 ```
 
 ## License
