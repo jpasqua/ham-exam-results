@@ -354,6 +354,7 @@ def load_pool_file(pool_file):
     Load a pool file and return a dict keyed by question ID.
     """
     debug_log(f"Loading question pool file: {pool_file}")
+    print(f"[INFO] Using question pool file: {pool_file.name}")
 
     with open(pool_file, 'r', encoding='utf-8') as f:
         data = json.load(f)

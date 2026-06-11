@@ -60,6 +60,10 @@ def index():
             applicant_name, results = processor.parse_exam_pdf(temp_path)
 
             if not applicant_name or not results:
+                print(
+                    "[WARN] PDF parsed but no applicant name or exam results were extracted. "
+                    f"applicant_name={applicant_name!r}, results_count={len(results) if results else 0}"
+                )
                 return render_template(
                     'upload.html',
                     error="We could not extract any results from this file. "
@@ -70,6 +74,14 @@ def index():
                 'report.html',
                 applicant=applicant_name,
                 results=results
+            )
+
+        except FileNotFoundError as e:
+            print(f"[ERROR] Missing question pool file: {e}")
+            return render_template(
+                'upload.html',
+                error="This exam uses a question pool that is not installed on this server yet. "
+                      "Please contact the site administrator to add the matching pool file."
             )
 
         except Exception as e:
