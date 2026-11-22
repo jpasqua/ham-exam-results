@@ -213,6 +213,107 @@ When you've completed these steps you will have:
 * Easy Git-based updates with `git pull`
 
 
+## Namecheap Shared Hosting Deployment Checklist
+
+Namecheap Shared Hosting runs this Flask application through cPanel's **Setup
+Python App** feature and [Passenger](https://www.phusionpassenger.com/docs/),
+the web application server that starts and manages the Python application.
+The application source belongs in the Python application root, not the domain's
+document root.
+
+### 1️⃣ Prepare the domain
+
+In cPanel, add the domain as an addon domain under **Domains**. Do not share
+the primary domain's document root. Point the domain to Namecheap Web Hosting
+DNS and wait for the new domain to resolve to the hosting account.
+
+### 2️⃣ Create the Python application
+
+In cPanel, open **Software → Setup Python App** and create an application.
+Use Python 3.13 when it is available. For example, to host the application at
+`https://kr4ml.net/ham_exam_results/`, use:
+
+| Setting | Value |
+| --- | --- |
+| Application root | `kr4ml-app` |
+| Application URL domain | `kr4ml.net` |
+| Application URL path | `/ham_exam_results` |
+| Application startup file | `passenger_wsgi.py` |
+| Application entry point | `application` |
+
+The application root in this example is `/home/your_username/kr4ml-app`.
+The public URL is configured in cPanel; do not use cPanel's internal addon
+subdomain as the application URL.
+
+### 3️⃣ Pull the project into the application root
+
+After creating the application, cPanel may add a default `passenger_wsgi.py`
+file to the application root. This repository supplies a tracked file with
+the same name, so rename cPanel's generated file before the first Git pull to
+avoid an untracked-file conflict. Keeping the generated file is optional; it
+is only preserved here as a backup.
+
+In cPanel **Terminal**:
+
+```bash
+cd ~/kr4ml-app
+if [ -f passenger_wsgi.py ]; then
+    mv passenger_wsgi.py passenger_wsgi.py.namecheap-default
+fi
+git init
+git remote add origin https://github.com/jpasqua/ham-exam-results.git
+git pull origin main
+```
+
+Use the repository's actual default branch if it is not `main`.
+
+### 4️⃣ Install dependencies
+
+The Setup Python App page displays the exact command needed to activate its
+virtual environment. Run that command, then install the project's pinned
+dependencies:
+
+```bash
+cd ~/kr4ml-app
+python --version
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+```
+
+Confirm that `python --version` reports Python 3.9 or newer before installing
+dependencies. The current project dependency set requires Python 3.9+.
+
+### 5️⃣ Configure and restart Passenger
+
+The tracked `passenger_wsgi.py` file exposes the Flask application using the
+`application` entry point required by Passenger. In **Setup Python App**, save
+the startup-file and entry-point settings, then click **Restart**.
+
+Once Namecheap has installed the domain certificate, test the configured public
+URL. Use the **Namecheap SSL** cPanel tool to enable an HTTPS redirect.
+
+### 6️⃣ Check errors, if needed
+
+For a 500 error, use **Metrics → Errors** in cPanel after reproducing the
+failure. It shows the recent Passenger/Python error messages without exposing
+application tracebacks to site visitors.
+
+### 🔄 Updating the app in the future
+
+In cPanel **Terminal**, activate the application's virtual environment using
+the command shown by Setup Python App, then run:
+
+```bash
+cd ~/kr4ml-app
+git pull origin main
+python -m pip install -r requirements.txt
+```
+
+Click **Restart** for the application in **Setup Python App** after each
+update. Installing dependencies again is safe and ensures new requirements are
+applied when the application changes.
+
+
 ## Notes
 
 - The JSON files which contain the exam content and correct answers are sourced from this [repo](https://github.com/russolsen/ham_radio_question_pool). Our thanks for making these available with the [Apache 2.0 License](https://github.com/russolsen/ham_radio_question_pool#Apache-2.0-1-ov-file).
