@@ -221,6 +221,8 @@ the web application server that starts and manages the Python application.
 The application source belongs in the Python application root, not the domain's
 document root.
 
+In this example we will use the kr4ml.net as the hsoting domain and /ham_exam_results as the Application URL path. Substitute alternate domain and application URL path as needed. 
+
 ### 1️⃣ Prepare the domain
 
 In cPanel, add the domain as an addon domain under **Domains**. Do not share
