@@ -221,7 +221,11 @@ the web application server that starts and manages the Python application.
 The application source belongs in the Python application root, not the domain's
 document root.
 
-In this example we will use the kr4ml.net as the hsoting domain and /ham_exam_results as the Application URL path. Substitute alternate domain and application URL path as needed. 
+In this example we will use `kr4ml.net` as the hosting domain and
+`/ham_exam_results` as the Application URL path. Application roots are kept
+under `~/python_apps` so multiple hosted applications can share a consistent
+layout. Substitute an alternate domain, application URL path, and application
+root as needed.
 
 ### 1️⃣ Prepare the domain
 
@@ -231,19 +235,29 @@ DNS and wait for the new domain to resolve to the hosting account.
 
 ### 2️⃣ Create the Python application
 
-In cPanel, open **Software → Setup Python App** and create an application.
-Use Python 3.13 when it is available. For example, to host the application at
+In cPanel **Terminal**, create the parent directory for hosted Python
+applications if it does not already exist:
+
+```bash
+mkdir -p ~/python_apps
+```
+
+Then open **Software → Setup Python App** and create an application. Use Python
+3.13 when it is available. For example, to host the application at
 `https://kr4ml.net/ham_exam_results/`, use:
 
 | Setting | Value |
 | --- | --- |
-| Application root | `kr4ml-app` |
+| Application root | `python_apps/kr4ml-ham_exam_results` |
 | Application URL domain | `kr4ml.net` |
 | Application URL path | `/ham_exam_results` |
 | Application startup file | `passenger_wsgi.py` |
 | Application entry point | `application` |
 
-The application root in this example is `/home/your_username/kr4ml-app`.
+The application root in this example is
+`/home/your_username/python_apps/kr4ml-ham_exam_results`. Keep application
+roots outside the domain's document root. For example, a future SurfExams app
+could use `python_apps/surfexams-check_frn`.
 The public URL is configured in cPanel; do not use cPanel's internal addon
 subdomain as the application URL.
 
@@ -258,7 +272,7 @@ is only preserved here as a backup.
 In cPanel **Terminal**:
 
 ```bash
-cd ~/kr4ml-app
+cd ~/python_apps/kr4ml-ham_exam_results
 if [ -f passenger_wsgi.py ]; then
     mv passenger_wsgi.py passenger_wsgi.py.namecheap-default
 fi
@@ -276,7 +290,8 @@ virtual environment. Run that command, then install the project's pinned
 dependencies:
 
 ```bash
-cd ~/kr4ml-app
+cd ~/python_apps/kr4ml-ham_exam_results
+source ~/virtualenv/python_apps/kr4ml-ham_exam_results/3.13/bin/activate
 python --version
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
@@ -289,7 +304,13 @@ dependencies. The current project dependency set requires Python 3.9+.
 
 The tracked `passenger_wsgi.py` file exposes the Flask application using the
 `application` entry point required by Passenger. In **Setup Python App**, save
-the startup-file and entry-point settings, then click **Restart**.
+the startup-file and entry-point settings, then click **Restart**. A command-
+line restart is also available from the application root:
+
+```bash
+mkdir -p tmp
+touch tmp/restart.txt
+```
 
 Once Namecheap has installed the domain certificate, test the configured public
 URL. Use the **Namecheap SSL** cPanel tool to enable an HTTPS redirect.
@@ -306,14 +327,18 @@ In cPanel **Terminal**, activate the application's virtual environment using
 the command shown by Setup Python App, then run:
 
 ```bash
-cd ~/kr4ml-app
+cd ~/python_apps/kr4ml-ham_exam_results
+source ~/virtualenv/python_apps/kr4ml-ham_exam_results/3.13/bin/activate
 git pull origin main
 python -m pip install -r requirements.txt
+mkdir -p tmp
+touch tmp/restart.txt
 ```
 
-Click **Restart** for the application in **Setup Python App** after each
-update. Installing dependencies again is safe and ensures new requirements are
-applied when the application changes.
+Touching `tmp/restart.txt` requests a Passenger restart on the next request,
+so there is no need to return to cPanel for routine updates. Installing
+dependencies again is safe and ensures new requirements are applied when the
+application changes.
 
 
 ## Notes
